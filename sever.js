@@ -5,6 +5,6 @@ const sever = app;
 
 sever.listen(config.port, () => {
   console.log(
-    `Sever is running in ${config.nodeEnv} mode on: http://localhost:${config.port}`
+    `Sever is running in ${config.nodeEnv} mode on: ${config.baseUrl}`
   );
 });

@@ -5,11 +5,9 @@ let markers = [];
 let map, infoWindow;
 
 document.addEventListener("DOMContentLoaded", () => {
-  const key = document.getElementById("map").getAttribute("value");
-
   // Loader
   const loader = new google.maps.plugins.loader.Loader({
-    apiKey: key,
+    apiKey: apiKey,
     version: "weekly",
     libraries: ["marker", "places", "core"],
   });
