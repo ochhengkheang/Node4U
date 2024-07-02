@@ -1,6 +1,6 @@
 import { config } from "../config/config.js";
-import { addressesJsonDataPath } from "../utils/file.js";
-import { getClientIP } from "../utils/ip.js";
+import { addressesJsonDataPath } from "../helpers/file.js";
+import { getClientIP } from "../helpers/ip.js";
 import fs from "fs";
 
 const jsonData = JSON.parse(fs.readFileSync(addressesJsonDataPath, "utf-8"));

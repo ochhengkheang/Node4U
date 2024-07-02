@@ -1469,8 +1469,8 @@ video {
     margin-bottom: 1.5rem;
   }
 
-  .md\:mb-0 {
-    margin-bottom: 0px;
+  .md\:mb-1 {
+    margin-bottom: 0.25rem;
   }
 
   .md\:me-6 {
@@ -1483,10 +1483,6 @@ video {
 
   .md\:mt-2 {
     margin-top: 0.5rem;
-  }
-
-  .md\:mb-1 {
-    margin-bottom: 0.25rem;
   }
 
   .md\:flex {

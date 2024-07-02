@@ -1,5 +1,5 @@
-import { employeeJsonDataPath } from "../utils/file.js";
 import fs from "fs";
+import { employeeJsonDataPath } from "../helpers/file.js";
 
 const jsonData = JSON.parse(fs.readFileSync(employeeJsonDataPath, "utf-8"));
 // console.log(jsonData);
