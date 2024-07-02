@@ -1,0 +1,17 @@
+extend ../layouts/main
+include ../mixins/search_category
+include ../mixins/product_card
+
+block content
+    .body-padding
+        +searchCategory("Find eco-friendly products here", categoryQuery, categories)
+        div(class="my-0 lg:my-10 xl:my-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4")
+            -var categoryMap = new Map(categories.map(category => [category.id, category]));
+            each item in items
+                -var categoryId = item.categoryId;
+                -var category = categoryMap.get(categoryId);
+                if category
+                    +productCard(item.name, item.price, category.name, "")
+                else
+                    +productCard(item.name, item.price, "1", "")
+    script(src="/js/search.js")

@@ -1,0 +1,7 @@
+mixin categoryCard(title, picture)
+    div(class="relative m-3 flex flex-wrap mx-auto justify-center")
+        div(class="relative bg-white shadow-md rounded-3xl p-2 mx-1 my-3 cursor-pointer")
+            div(class="overflow-x-hidden rounded-2xl relative")
+                img(class="h-40 rounded-2xl w-full object-cover" src=picture || "https://pixahive.com/wp-content/uploads/2020/10/Gym-shoes-153180-pixahive.jpg" alt="Pic")
+            div(class="mt-4 pl-2 mb-2")
+                p(class=" text-center text-lg font-semibold text-gray-900 mb-0")= title

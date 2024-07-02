@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components{
+    .grid-main{
+        @apply my-0 md:my-40 p-16 block justify-between md:flex;
+    }
+    .grid-main-left{
+        @apply w-2/3 mx-auto md:flex;
+    }
+    .grid-main-right{
+        @apply my-10 md:my-20 inline-block mx-auto flex-col text-center md:text-left;
+    }
+
+    .body-padding{
+        @apply p-16
+    }
+
+    .nav-text-style{
+        @apply text-gray-300 font-semibold hover:text-white hover:underline
+    }
+}

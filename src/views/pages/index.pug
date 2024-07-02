@@ -1,0 +1,40 @@
+extend ../layouts/main
+include ../mixins/category_card
+include ../mixins/product_card
+include ../mixins/search
+
+block content
+    //- Spacing Container
+    div.grid-main
+        //- Image Container
+        div.grid-main-left
+            img(class= "object-contain mx-auto" src="images/sammy-line-girl-with-plants.png", alt="Sammy Plant")
+        //- Content Container
+        div.grid-main-right
+            //- Heading
+            h1(class="text-4xl font-bold mt-8 mb-2") Explore out collection of sustainable products for a greener
+            //- Subtitle
+            p1(class="text-lgfont-normal") Browse by category brand, or eco-friendly deals
+            div(class = "mt-8 mx-auto items-start")
+                +search("Find eco-friendly products here")
+
+    div(class="p-20 flex flex-col justify-center")
+        h1(class="pb-14 text-center text-3xl font-bold mt-8") Category
+        div(class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4")
+            each category in categories
+                +categoryCard(category.name , "")
+
+    div(class="bg-gray-100 flex flex-col justify-center lg:flex-row")
+        div(class="my-10 md:my-20 inline-block mx-auto flex-col text-start")
+            h1(class="text-center text-3xl font-bold ") Popular Products
+        div(class="my-0 lg:my-10 xl:my-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4")
+            -var categoryMap = new Map(categories.map(category => [category.id, category]));
+            each item in items
+                -var categoryId = item.categoryId;
+                -var category = categoryMap.get(categoryId);
+                if category
+                    +productCard(item.name, item.price, category.name, "")
+                else
+                    +productCard(item.name, item.price, "1", "")
+
+    script(src="js/index.js")

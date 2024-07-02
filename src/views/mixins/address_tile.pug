@@ -1,0 +1,17 @@
+mixin addressTile(address)
+    //- Presence of special characters (like single quotes) which lead to error. For example, Jorge's coffee.
+    div(
+        class="bg-white rounded-lg shadow-lg p-8 mb-1 hover:bg-gray-100"
+        onclick=`addressTileClickHandler({
+            place_id: '${address.place_id.replace(/'/g, "\\'")}',
+            lat: '${address.lat}',
+            lng: '${address.lng}',
+            name: '${address.name.replace(/'/g, "\\'")}',
+            address: '${address.address.replace(/'/g, "\\'")}',
+            link: '${address.link.replace(/'/g, "\\'")}',
+            label: '${address.label.replace(/'/g, "\\'")}'
+        })`
+    )
+        h2(class="text-xl font-bold text-gray-800 mb-4") #{address.name}
+        p(class="text-gray-700") #{address.address}
+        a(href=address.link class="block underline text-blue-500 break-words") #{address.link}
