@@ -1,5 +1,3 @@
-let BASE_URL = "http://localhost:3000";
-
 const submitButton = document.getElementById("submit-button");
 submitButton.addEventListener("click", async () => {
   try {
@@ -11,10 +9,11 @@ submitButton.addEventListener("click", async () => {
     const address = document.getElementById("form-address").value;
     const link = document.getElementById("form-link").textContent;
     let response;
+
     if (label && name && address && link) {
       if (submitButton.textContent == "Add") {
         response = await axios.post(
-          "http://localhost:3000/address/",
+          `${clientBaseUrl}/address/`,
           JSON.stringify({
             user_id: "1",
             place_id: place_id,
@@ -33,7 +32,7 @@ submitButton.addEventListener("click", async () => {
         );
       } else {
         response = await axios.patch(
-          `http://localhost:3000/address/${place_id}`,
+          `${clientBaseUrl}/address/${place_id}`,
           JSON.stringify({
             user_id: "1",
             place_id: place_id,
@@ -83,7 +82,7 @@ document.getElementById("delete-button").addEventListener("click", async () => {
     const link = document.getElementById("form-link").textContent;
 
     const response = await axios.delete(
-      `http://localhost:3000/address/${place_id}`,
+      `${clientBaseUrl}/address/${place_id}`,
       JSON.stringify({
         user_id: "1",
         lat: lat,
