@@ -10,11 +10,16 @@ export const getAddressController = (req, res) => {
   try {
     const clientIP = getClientIP(req);
 
+    const clientEnv = {
+      baseUrl: config.baseUrl,
+      googleMapApiKey: config.googleMapApiKey,
+      clientIP: clientIP,
+    };
+
     const addresses = jsonData;
 
     return res.render("pages/address.pug", {
-      googleMapApiKey: config.googleMapApiKey,
-      clientIP: clientIP,
+      clientEnv,
       addresses,
     });
   } catch (error) {
