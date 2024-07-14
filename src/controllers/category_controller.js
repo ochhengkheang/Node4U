@@ -1,91 +1,136 @@
-import fs from "fs";
-import { categoryJsonDataPath } from "../helpers/file.js";
+import {
+  deleteACategoryQuery,
+  getACategoryFilteredByIdQuery,
+  getCategoriesFilteredAutoQuery,
+  postACategoryQuery,
+  putACategoryQuery,
+} from "../database/query/pg_query_category.js";
 
-const jsonData = JSON.parse(fs.readFileSync(categoryJsonDataPath, "utf-8"));
-// console.log(jsonData);
+export const getCategoryController = async (req, res) => {
+  try {
+    const { name, description, offset, limit } = req.query;
 
-export const getCategoryController = (req, res) => {
-  res.status(200).json(jsonData);
+    const categories = await getCategoriesFilteredAutoQuery(
+      name,
+      description,
+      offset,
+      limit
+    );
+
+    res.status(200).json(categories);
+  } catch (error) {
+    res.status(error.code ?? 500).json({ message: error.message });
+  }
 };
-export const postCategoryController = (req, res) => {
-  const reqId = req.body.id;
-  const result = jsonData.some(({ id }) => id === reqId);
-  //   console.log(`Result: ${result}`);
-  if (result) {
-    res.status(409).json({
-      status: 409,
-      message: `Id: ${reqId} already exists.`,
-    });
-  } else {
-    const reqBody = req.body;
-    jsonData.push(reqBody);
-    fs.writeFileSync(categoryJsonDataPath, JSON.stringify(jsonData));
+
+export const getCategoryByIdController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const category = await getACategoryFilteredByIdQuery(id);
+
+    if (category.length > 0) {
+      res.status(200).json(category);
+    } else {
+      res.status(404).json({ status: 404, message: `Category not found.` });
+    }
+  } catch (error) {
+    res.status(error.code ?? 500).json({ message: error.message });
+  }
+};
+
+export const postCategoryController = async (req, res) => {
+  try {
+    const { name, description, image_id } = req.body;
+
+    await postACategoryQuery(name, description, image_id);
+
     res.status(201).json({
       status: 201,
       message: `Add successfully.`,
     });
-  }
-};
-export const getCategoryByIdController = (req, res) => {
-  const paramId = req.params.id;
-  const result = jsonData.find(({ id }) => id == paramId);
-  if (result) {
-    res.status(200).json(result);
-  } else {
-    res.status(404).json({ status: 404, message: `Id: ${paramId} Not found.` });
-  }
-};
-export const putCategoryByIdController = (req, res) => {
-  const paramId = req.params.id;
-  const reqLabel = req.body.label;
-  const reqDescription = req.body.description;
-  const index = jsonData.findIndex(({ id }) => id == paramId);
-  // console.log(index);
-  if (index >= 0) {
-    jsonData[index].name = reqName;
-    jsonData[index].description = reqDescription;
-    fs.writeFileSync(categoryJsonDataPath, JSON.stringify(jsonData));
-    res.status(201).json({
-      status: 201,
-      message: `Update successfully.`,
-    });
-  } else {
-    res.status(404).json({ status: 404, message: `Id: ${paramId} Not found.` });
-  }
-};
-export const patchCategoryByIdController = (req, res) => {
-  const paramId = req.params.id;
-  const reqName = req.body.name;
-  const reqDescription = req.body.description;
-  const index = jsonData.findIndex(({ id }) => id == paramId);
-  if (index >= 0) {
-    jsonData[index].name =
-      reqName === undefined ? jsonData[index].name : reqName;
-    jsonData[index].description =
-      reqDescription === undefined
-        ? jsonData[index].description
-        : reqDescription;
-    fs.writeFileSync(categoryJsonDataPath, JSON.stringify(jsonData));
-    res.status(201).json({
-      status: 201,
-      message: `Patch successfully.`,
-    });
-  } else {
-    res.status(404).json({ status: 404, message: `Id: ${paramId} Not found.` });
+  } catch (error) {
+    res.status(error.code ?? 500).json({ message: error.message });
   }
 };
 
-export const deleteCategoryByIdController = (req, res) => {
-  const paramId = req.params.id;
-  const index = jsonData.findIndex(({ id }) => id == paramId);
-  if (index >= 0) {
-    jsonData.splice(index, 1);
-    fs.writeFileSync(categoryJsonDataPath, JSON.stringify(jsonData));
-    res.status(201).json({
-      status: 201,
-      message: `Delete successfully.`,
-    });
-  } else {
-    res.status(404).json({ status: 404, message: `Id: ${paramId} Not found.` });
+export const putCategoryByIdController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { name, description, image_id } = req.body;
+
+    const category = await getACategoryFilteredByIdQuery(id);
+
+    if (category.length > 0) {
+      await putACategoryQuery(
+        name,
+        description,
+        !image_id ? category[0].image.image_id : image_id,
+        id
+      );
+
+      res.status(201).json({
+        status: 201,
+        message: `Update successfully.`,
+      });
+    } else {
+      res.status(404).json({ status: 404, message: `Category not found.` });
+    }
+  } catch (error) {
+    res.status(error.code ?? 500).json({ message: error.message });
+  }
+};
+
+export const patchCategoryByIdController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { name, description, image_id } = req.body;
+
+    const category = await getACategoryFilteredByIdQuery(id);
+
+    if (category.length > 0) {
+      await putACategoryQuery(
+        !name ? category[0].name : name,
+        !description ? category[0].description : description,
+        !image_id ? category[0].image.image_id : image_id,
+        id
+      );
+
+      res.status(201).json({
+        status: 201,
+        message: `Patch successfully.`,
+      });
+    } else {
+      res.status(404).json({ status: 404, message: `Category not found.` });
+    }
+  } catch (error) {
+    res.status(error.code ?? 500).json({ message: error.message });
+  }
+};
+
+export const deleteCategoryByIdController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const category = await getACategoryFilteredByIdQuery(id);
+
+    if (category.length > 0) {
+      await deleteACategoryQuery(id);
+
+      await deleteAImageQuery(category[0].image.image_id);
+
+      await deleteImage(id, "categories");
+
+      res.status(201).json({
+        status: 201,
+        message: `Delete successfully.`,
+      });
+    } else {
+      res.status(404).json({ status: 404, message: `Category not found.` });
+    }
+  } catch (error) {
+    res.status(error.code ?? 500).json({ message: error.message });
   }
 };

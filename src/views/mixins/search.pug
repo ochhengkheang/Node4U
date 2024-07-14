@@ -2,9 +2,9 @@ mixin search(placeholder)
     form(action="/search" method="get" class="flex max-w-md mx-auto md:mx-0")
         label(for="simple-search" class="sr-only") Search
         div(class = "relative w-full")
-            select(class="hidden" name="category")
+            select(class="hidden" name="category_id")
                 option(value="") Select Category
-            input(type="text" id="simple-search" name="query"
+            input(type="text" id="simple-search" name="name"
                 class="truncate w-full ps-10 py-3 pl-3 pr-16 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder=placeholder)
             div(class = "absolute right-0 top-0 mt-2 mr-11")

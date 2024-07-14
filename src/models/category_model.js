@@ -1,14 +1,9 @@
-export const CategoryModel = (id, name) => {
-  this.id = id;
-  this.name = name;
-};
-
-CategoryModel.prototype.getId = () => this.id;
-CategoryModel.prototype.getName = () => this.name;
-
-CategoryModel.setId = (id) => {
-  this.id = id;
-};
-CategoryModel.setName = (name) => {
-  this.name = name;
-};
+export const convertRowToCategoryModel = (row) => ({
+  category_id: row.category_id,
+  category_name: row.category_name,
+  category_description: row.category_description,
+  image: {
+    image_id: row.category_image_id,
+    image_url: row.category_image_url,
+  },
+});

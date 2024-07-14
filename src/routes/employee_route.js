@@ -3,23 +3,26 @@ import {
   deleteEmployeeByIdController,
   getEmployeeByIdController,
   getEmployeeController,
+  patchEmployeeByIdController,
   postEmployeeController,
-  updateEmployeeByIdController,
+  putEmployeeByIdController,
 } from "../controllers/employee_controller.js";
 import {
-  validatePostEmployee,
-  validatePutEmployee,
+  validateEmployeeBodyOptional,
+  validateEmployeeBodyRequired,
+  validateEmployeeQuery,
 } from "../validators/employee_validator.js";
 
 export const employeeRoute = express.Router();
 
 employeeRoute
   .route("/")
-  .get(getEmployeeController)
-  .post(validatePostEmployee, postEmployeeController);
+  .get(validateEmployeeQuery, getEmployeeController)
+  .post(validateEmployeeBodyRequired, postEmployeeController);
 
 employeeRoute
   .route("/:id")
   .get(getEmployeeByIdController)
-  .put(validatePutEmployee, updateEmployeeByIdController)
+  .put(validateEmployeeBodyRequired, putEmployeeByIdController)
+  .patch(validateEmployeeBodyOptional, patchEmployeeByIdController)
   .delete(deleteEmployeeByIdController);

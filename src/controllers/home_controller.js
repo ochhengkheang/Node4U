@@ -1,11 +1,13 @@
+import { config } from "../config/config.js";
+
 export const getHomeController = async (req, res) => {
   try {
     // Fetch data from the home path (categories endpoint)
-    const categoriesResponse = await fetch("http://localhost:3000/category/");
+    const categoriesResponse = await fetch(`${config.baseUrl}/category/`);
     const categories = await categoriesResponse.json();
     // console.log(categories);
 
-    const itemsResponse = await fetch("http://localhost:3000/item/");
+    const itemsResponse = await fetch(`${config.baseUrl}/item/`);
     const items = await itemsResponse.json();
     // console.log(items);
 

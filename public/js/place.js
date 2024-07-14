@@ -13,7 +13,7 @@ submitButton.addEventListener("click", async () => {
     if (label && name && address && link) {
       if (submitButton.textContent == "Add") {
         response = await axios.post(
-          `${clientBaseUrl}/address/`,
+          `${clientBaseUrl}/place/`,
           JSON.stringify({
             user_id: "1",
             place_id: place_id,
@@ -32,7 +32,7 @@ submitButton.addEventListener("click", async () => {
         );
       } else {
         response = await axios.patch(
-          `${clientBaseUrl}/address/${place_id}`,
+          `${clientBaseUrl}/place/${place_id}`,
           JSON.stringify({
             user_id: "1",
             place_id: place_id,
@@ -82,7 +82,7 @@ document.getElementById("delete-button").addEventListener("click", async () => {
     const link = document.getElementById("form-link").textContent;
 
     const response = await axios.delete(
-      `${clientBaseUrl}/address/${place_id}`,
+      `${clientBaseUrl}/place/${place_id}`,
       JSON.stringify({
         user_id: "1",
         lat: lat,

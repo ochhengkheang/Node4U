@@ -1,29 +1,30 @@
 import axios from "axios";
+import { config } from "../config/config.js";
 
 export const getSearchController = async (req, res) => {
-  const nameQuery = req.query.query;
-  const categoryQuery = req.query.category;
+  const { name, category_id } = req.query;
 
   try {
-    const categoriesResponse = await axios.get(
-      "http://localhost:3000/category/"
-    );
+    const categoriesResponse = await axios.get(`${config.baseUrl}/category/`);
+
     const categories = categoriesResponse.data;
     if (!categories) throw new Error("Cannot get Category");
+    // console.log(categories);
 
-    const itemsResponse =
-      categoryQuery == ""
-        ? await axios.get(`http://localhost:3000/item?name=${nameQuery}`)
-        : await axios.get(
-            `http://localhost:3000/item?category=${encodeURIComponent(categoryQuery)}&name=${nameQuery}`
-          );
+    const itemsResponse = !category_id
+      ? await axios.get(`${config.baseUrl}/item?name=${name}`)
+      : await axios.get(
+          `${config.baseUrl}/item?category_id=${encodeURIComponent(category_id)}&name=${name}`
+        );
+
     const items = itemsResponse.data;
     if (!items) throw new Error("Cannot get items");
+    // console.log(category_id);
 
     res.render("pages/search.pug", {
-      title: `${nameQuery} - Search`,
-      nameQuery,
-      categoryQuery,
+      title: `${name} - Search`,
+      name,
+      category_id,
       categories,
       items,
     });

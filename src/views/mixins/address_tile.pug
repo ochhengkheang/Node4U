@@ -1,17 +1,18 @@
-mixin addressTile(address)
+mixin addressTile(place)
     //- Presence of special characters (like single quotes) which lead to error. For example, Jorge's coffee.
     div(
         class="bg-white rounded-lg shadow-lg p-8 mb-1 hover:bg-gray-100"
         onclick=`addressTileClickHandler({
-            place_id: '${address.place_id.replace(/'/g, "\\'")}',
-            lat: '${address.lat}',
-            lng: '${address.lng}',
-            name: '${address.name.replace(/'/g, "\\'")}',
-            address: '${address.address.replace(/'/g, "\\'")}',
-            link: '${address.link.replace(/'/g, "\\'")}',
-            label: '${address.label.replace(/'/g, "\\'")}'
+            place_id: '${place.place_id.replace(/'/g, "\\'")}',
+            lat: '${place.lat}',
+            lng: '${place.lng}',
+            name: '${place.name.replace(/'/g, "\\'")}',
+            address: '${place.address.replace(/'/g, "\\'")}',
+            link: '${place.link.replace(/'/g, "\\'")}',
+            label: '${place.label.replace(/'/g, "\\'")}'
         })`
     )
-        h2(class="text-xl font-bold text-gray-800 mb-4") #{address.name}
-        p(class="text-gray-700") #{address.address}
-        a(href=address.link class="block underline text-blue-500 break-words") #{address.link}
+        h1(class="text-xl font-bold text-gray-800 mb-4") #{place.name}
+        h1(class="text-l font-semibold text-gray-800 mb-4") #{place.label}
+        p(class="text-gray-700") #{place.address}
+        a(href=place.link class="block underline text-blue-500 break-words") #{place.link}

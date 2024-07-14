@@ -1,4 +1,4 @@
-mixin searchCategory(placeholder, categoryQuery, categories)
+mixin searchCategory(placeholder, nameQuery, category_id, categories)
     form(id="search-form" action="/search" method="get" class="flex flex-wrap items-center space-y-3 md:space-y-0 mx-auto md:mx-0")
         label(for="simple-search" class="sr-only") Search
 
@@ -9,22 +9,22 @@ mixin searchCategory(placeholder, categoryQuery, categories)
                 //- Previous Category
                 select(id = "previous-category-dropdown" class='hidden')
                     option(value='') Select Category
-                    each category in categories
-                        option(value=category.id selected = categoryQuery === category.id) #{category.name}
+                    each category in categories.categories
+                        option(value=category.category_id selected = category_id == category.category_id) #{category.category_name}
 
                 //- Current Category
-                select(name="category" id = "category-dropdown"
+                select(name="category_id" id = "category-dropdown"
                     class="truncate py-3 pl-3 w-full bg-gray-50 border border-gray-300 text-gray-900 text-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500")
                     option(value='') Select Category
-                    each category in categories
-                        option(value=category.id selected = categoryQuery === category.id) #{category.name}
+                    each category in categories.categories
+                        option(value=category.category_id selected = category_id == category.category_id) #{category.category_name}
 
             //- Previous search
             input(type="text" id="previous-search" class='hidden' value = nameQuery)
 
             //- Current Search textfield
             div(class="relative w-3/4 md:w-5/6")
-                input(type="text" id="simple-search" name="query" value = nameQuery
+                input(type="text" id="simple-search" name="name" value = nameQuery
                     class="truncate w-full ps-10 py-3 pl-3 pr-16 bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder=placeholder)
                 div(class="absolute right-0 top-0 mt-2 mr-11")

@@ -8,21 +8,21 @@ import {
   putCategoryByIdController,
 } from "../controllers/category_controller.js";
 import {
-  validatePatchCategory,
-  validatePostCategory,
-  validatePutCategory,
+  validateCategoryBodyOptional,
+  validateCategoryBodyRequired,
+  validateCategoryQuery,
 } from "../validators/category_validator.js";
 
 export const categoryRoute = express.Router();
 
 categoryRoute
   .route("/")
-  .get(getCategoryController)
-  .post(validatePostCategory, postCategoryController);
+  .get(validateCategoryQuery, getCategoryController)
+  .post(validateCategoryBodyRequired, postCategoryController);
 
 categoryRoute
   .route("/:id")
   .get(getCategoryByIdController)
-  .put(validatePutCategory, putCategoryByIdController)
-  .patch(validatePatchCategory, patchCategoryByIdController)
+  .put(validateCategoryBodyRequired, putCategoryByIdController)
+  .patch(validateCategoryBodyOptional, patchCategoryByIdController)
   .delete(deleteCategoryByIdController);
