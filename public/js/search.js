@@ -16,7 +16,7 @@ document
       "previous-category-dropdown"
     ).value;
 
-    if (currentCategoryValue === previousCategoryValue) {
+    if (currentCategoryValue == previousCategoryValue) {
       /// Search Value
       let previousSearchValue =
         document.getElementById("previous-search").value;

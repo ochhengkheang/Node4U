@@ -7,17 +7,21 @@ import {
   postItemController,
   putItemByIdController,
 } from "../controllers/item_controller.js";
-import { validatePostItem } from "../validators/item_validator.js";
+import {
+  validateItemBodyOptional,
+  validateItemBodyRequired,
+  validateItemQuery,
+} from "../validators/item_validator.js";
 
 export const itemRoute = express.Router();
 
 itemRoute
   .route("/")
-  .get(getItemController)
-  .post(validatePostItem, postItemController);
+  .get(validateItemQuery, getItemController)
+  .post(validateItemBodyRequired, postItemController);
 itemRoute
   .route("/:id")
   .get(getItemByIdController)
-  .put(putItemByIdController)
-  .patch(patchItemByIdController)
+  .put(validateItemBodyRequired, putItemByIdController)
+  .patch(validateItemBodyOptional, patchItemByIdController)
   .delete(deleteItemByIdController);

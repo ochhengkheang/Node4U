@@ -4,7 +4,7 @@ include ../mixins/address_tile
 block content
     div(class="flex-col mx-auto md:flex md:flex-row")
         .body-padding
-            h1(class="font-semibold text-2xl pb-2") Address
+            h1(class="font-semibold text-2xl pb-2") Place
             div(id="search-container" class="relative w-full mb-4")
                 textarea(
                     id="search-input"
@@ -40,11 +40,11 @@ block content
                     button(id='delete-button' type="button" class="hidden  align-baseline font-bold text-sm text-red-500 hover:text-red-800")  Delete
             div(class="w-full  md:w-1/2")
                 h1(class="font-semibold text-2xl pb-2") Your Addresses
-                each address in addresses
-                    +addressTile(address)
+                each place in places.places
+                    +addressTile(place)
 
     script.
         const clientBaseUrl = `#{clientEnv.baseUrl}`;
         const apiKey = `#{clientEnv.googleMapApiKey}`;
     script(src="/js/map.js")
-    script(src="/js/address.js")
+    script(src="/js/place.js")
