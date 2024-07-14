@@ -6,7 +6,6 @@ import { categoryRoute } from "./src/routes/category_route.js";
 import { homeRoutes } from "./src/routes/home_route.js";
 import { searchRoute } from "./src/routes/search_route.js";
 import flash from "connect-flash";
-import session from "express-session";
 import cors from "cors";
 import { validateJson } from "./src/middlewares/json_validate.js";
 import { placeRoute } from "./src/routes/place_route.js";
@@ -14,16 +13,37 @@ import { userRoute } from "./src/routes/user_route.js";
 import { brandRoute } from "./src/routes/brand_route.js";
 import { imageRoute } from "./src/routes/images_route.js";
 import favicon from "serve-favicon";
+import cookieSession from "cookie-session";
+import sanitizer from "perfect-express-sanitizer";
 
 export const app = express();
 
-/// Access static files in PUBLIC
+// Access static files in PUBLIC
 app.use(express.static("./public"));
 
-/// Flash
+// Sessions
 app.use(
-  session({ secret: "secret key", resave: false, saveUninitialized: false })
+  cookieSession({
+    cookie: {
+      secure: true,
+      maxAge: 60000,
+    },
+    secret: "secret key",
+    resave: false,
+    saveUninitialized: false,
+  })
 );
+
+// Sanitizer to prevent harmful user data like sql injection
+app.use(
+  sanitizer.clean({
+    xss: true,
+    noSql: true,
+    sql: true,
+  })
+);
+
+// Flash
 app.use(flash());
 
 // Serve your favicon using serve-favicon middleware
