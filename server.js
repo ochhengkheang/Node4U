@@ -1,10 +1,10 @@
 import { app } from "./app.js";
 import { config } from "./src/config/config.js";
-import { pool } from "./src/database/pg_pool.js";
+import { pool } from "./src/database/pg/pg_pool.js";
 
-const server = app.listen(config.port, () => {
+const server = app.listen(config.mainConfig.port, () => {
   console.log(
-    `Server is running in ${config.nodeEnv} mode on: ${config.baseUrl}`
+    `Server is running in ${config.mainConfig.nodeEnv} mode on: ${config.mainConfig.baseUrl}`
   );
 });
 

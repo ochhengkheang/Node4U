@@ -5,6 +5,8 @@ export const deleteTables = async () => {
   try {
     const queryText = `
         drop table if exists users CASCADE;
+        drop table if exists tokens CASCADE;
+        drop table if exists user_profiles CASCADE;
         drop table if exists employees CASCADE;
         drop table if exists categories CASCADE;
         drop table if exists brands CASCADE;

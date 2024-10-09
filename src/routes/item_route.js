@@ -12,16 +12,17 @@ import {
   validateItemBodyRequired,
   validateItemQuery,
 } from "../validators/item_validator.js";
+import { authenticateToken } from "../middlewares/jwt_validate.js";
 
 export const itemRoute = express.Router();
 
 itemRoute
   .route("/")
   .get(validateItemQuery, getItemController)
-  .post(validateItemBodyRequired, postItemController);
+  .post(authenticateToken, validateItemBodyRequired, postItemController);
 itemRoute
   .route("/:id")
   .get(getItemByIdController)
-  .put(validateItemBodyRequired, putItemByIdController)
-  .patch(validateItemBodyOptional, patchItemByIdController)
-  .delete(deleteItemByIdController);
+  .put(authenticateToken, validateItemBodyRequired, putItemByIdController)
+  .patch(authenticateToken, validateItemBodyOptional, patchItemByIdController)
+  .delete(authenticateToken, deleteItemByIdController);

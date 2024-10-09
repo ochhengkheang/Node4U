@@ -1,18 +1,23 @@
-import { deleteAImageQuery } from "../database/query/pg_query_image.js";
+import { deleteAImageQuery } from "../database/pg/query/pg_query_image.js";
 import {
-  deleteAUserQuery,
-  getAUserFilteredByIdQuery,
-  getUsersFilteredAutoQuery,
-  postAUserQuery,
-  putAUserQuery,
-} from "../database/query/pg_query_user.js";
+  deleteAUserProfileQuery,
+  getAUserProfileFilteredByIdQuery,
+  getUserProfilesFilteredAutoQuery,
+  postAUserProfileQuery,
+  putAUserProfileQuery,
+} from "../database/pg/query/pg_query_user_profile.js";
 import { deleteImage } from "../helpers/cloudinary.js";
 
-export const getUserController = async (req, res) => {
+export const getUserProfileController = async (req, res) => {
   try {
     const { name, email, offset, limit } = req.query;
 
-    const users = await getUsersFilteredAutoQuery(name, email, offset, limit);
+    const users = await getUserProfilesFilteredAutoQuery(
+      name,
+      email,
+      offset,
+      limit
+    );
 
     res.status(200).json(users);
   } catch (error) {
@@ -20,11 +25,11 @@ export const getUserController = async (req, res) => {
   }
 };
 
-export const getUserByIdController = async (req, res) => {
+export const getUserProfileByIdController = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await getAUserFilteredByIdQuery(id);
+    const user = await getAUserProfileFilteredByIdQuery(id);
 
     if (user.length > 0) {
       res.status(200).json(user);
@@ -36,11 +41,11 @@ export const getUserByIdController = async (req, res) => {
   }
 };
 
-export const postUserController = async (req, res) => {
+export const postUserProfileController = async (req, res) => {
   try {
     const { name, email, image_id } = req.body;
 
-    await postAUserQuery(name, email, !image_id ? null : image_id);
+    await postAUserProfileQuery(name, email, !image_id ? null : image_id);
 
     res.status(201).json({
       status: 201,
@@ -51,16 +56,16 @@ export const postUserController = async (req, res) => {
   }
 };
 
-export const putUserByIdController = async (req, res) => {
+export const putUserProfileByIdController = async (req, res) => {
   try {
     const { id } = req.params;
 
     const { name, email, image_id } = req.body;
 
-    const user = await getAUserFilteredByIdQuery(id);
+    const user = await getAUserProfileFilteredByIdQuery(id);
 
     if (user.length > 0) {
-      await putAUserQuery(
+      await putAUserProfileQuery(
         name,
         email,
         !image_id ? user[0].image.image_id : image_id,
@@ -79,16 +84,16 @@ export const putUserByIdController = async (req, res) => {
   }
 };
 
-export const patchUserByIdController = async (req, res) => {
+export const patchUserProfileByIdController = async (req, res) => {
   try {
     const { id } = req.params;
 
     const { name, email, image_id } = req.body;
 
-    const user = await getAUserFilteredByIdQuery(id);
+    const user = await getAUserProfileFilteredByIdQuery(id);
 
     if (user.length > 0) {
-      await putAUserQuery(
+      await putAUserProfileQuery(
         !name ? user[0].name : name,
         !email ? user[0].email : email,
         !image_id ? user[0].image.image_id : image_id,
@@ -107,14 +112,14 @@ export const patchUserByIdController = async (req, res) => {
   }
 };
 
-export const deleteUserByIdController = async (req, res) => {
+export const deleteUserProfileByIdController = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await getAUserFilteredByIdQuery(id);
+    const user = await getAUserProfileFilteredByIdQuery(id);
 
     if (user.length > 0) {
-      await deleteAUserQuery(id);
+      await deleteAUserProfileQuery(id);
 
       await deleteAImageQuery(user[0].image.image_id);
 

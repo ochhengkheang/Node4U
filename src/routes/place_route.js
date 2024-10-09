@@ -13,6 +13,7 @@ import {
   validatePlaceBodyRequired,
   validatePlaceQuery,
 } from "../validators/place_validator.js";
+import { authenticateToken } from "../middlewares/jwt_validate.js";
 
 export const placeRoute = express.Router();
 

@@ -51,10 +51,13 @@ export const customPgException = (pgError) => {
         "Invalid query, check your query if it is valid. Hint: Check syntax.";
       break;
 
+    case "42703":
+      code = 404;
+      message = pgError.message;
+
     case "08P01":
       code = 400;
       message = pgError.message;
-      message = "Internal Sever error";
       break;
 
     default:

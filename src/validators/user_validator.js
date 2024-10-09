@@ -1,10 +1,30 @@
 import { query, body, validationResult } from "express-validator";
 
-export const validateUserQuery = [
-  query("name").optional().isString().withMessage("Name must be a string"),
-  query("email").optional().isString().withMessage("Email must be a string"),
-  query("offset").optional().isInt().withMessage("Offset must be an interger"),
-  query("limit").optional().isInt().withMessage("Limit must be an interger"),
+export const validateUserProfileQuery = [
+  query("name")
+    .trim()
+    .escape()
+    .optional()
+    .isString()
+    .withMessage("Name must be a string"),
+  query("email")
+    .trim()
+    .escape()
+    .optional()
+    .isString()
+    .withMessage("Email must be a string"),
+  query("offset")
+    .trim()
+    .escape()
+    .optional()
+    .isInt()
+    .withMessage("Offset must be an interger"),
+  query("limit")
+    .trim()
+    .escape()
+    .optional()
+    .isInt()
+    .withMessage("Limit must be an interger"),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -15,18 +35,24 @@ export const validateUserQuery = [
   },
 ];
 
-export const validateUserBodyRequired = [
+export const validateUserProfileBodyRequired = [
   body("name")
+    .trim()
+    .escape()
     .notEmpty()
     .withMessage("Name is required")
     .isString()
     .withMessage("Name must be a string"),
   body("email")
+    .trim()
+    .escape()
     .notEmpty()
     .withMessage("Email is required")
     .isString()
     .withMessage("Email must be a string"),
   body("image_id")
+    .trim()
+    .escape()
     .optional()
     .isInt()
     .withMessage("Image ID must be an integer"),
@@ -40,10 +66,22 @@ export const validateUserBodyRequired = [
   },
 ];
 
-export const validateUserBodyOptional = [
-  body("name").optional().isString().withMessage("Name must be a string"),
-  body("email").optional().isString().withMessage("Email must be a string"),
+export const validateUserProfileBodyOptional = [
+  body("name")
+    .trim()
+    .escape()
+    .optional()
+    .isString()
+    .withMessage("Name must be a string"),
+  body("email")
+    .trim()
+    .escape()
+    .optional()
+    .isString()
+    .withMessage("Email must be a string"),
   body("image_id")
+    .trim()
+    .escape()
     .optional()
     .isInt()
     .withMessage("Image ID must be an integer"),

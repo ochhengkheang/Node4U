@@ -1,11 +1,11 @@
-import { deleteAImageQuery } from "../database/query/pg_query_image.js";
+import { deleteAImageQuery } from "../database/pg/query/pg_query_image.js";
 import {
   deleteAItemQuery,
   getItemsFilteredAutoQuery,
   getAItemFilteredByIdQuery,
   postAItemQuery,
   putAItemQuery,
-} from "../database/query/pg_query_item.js";
+} from "../database/pg/query/pg_query_item.js";
 import { deleteImage } from "../helpers/cloudinary.js";
 
 export const getItemController = async (req, res) => {

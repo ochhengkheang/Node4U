@@ -1,11 +1,11 @@
 import { v2 as cloudinary } from "cloudinary";
-import { cloudinaryConfig } from "../config/config.js";
+import { config } from "../config/config.js";
 import { customCloudinaryException } from "./exception.js";
 
 cloudinary.config({
-  cloud_name: cloudinaryConfig.cloudinaryName,
-  api_key: cloudinaryConfig.cloudinaryApiKey,
-  api_secret: cloudinaryConfig.cloudinaryApiSecret,
+  cloud_name: config.cloudinaryConfig.cloudinaryName,
+  api_key: config.cloudinaryConfig.cloudinaryApiKey,
+  api_secret: config.cloudinaryConfig.cloudinaryApiSecret,
 });
 
 export const deleteImage = async (id, type) => {

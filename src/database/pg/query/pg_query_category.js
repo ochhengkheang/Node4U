@@ -1,27 +1,25 @@
 import { pool } from "../pg_pool.js";
-import { customPgException } from "../../helpers/exception.js";
-import { convertRowToUserModel } from "../../models/user_model.js";
+import { customPgException } from "../../../helpers/exception.js";
+import { convertRowToCategoryModel } from "../query_parser/category_model.js";
 
-export const getAUserFilteredByIdQuery = async (id) => {
+export const getACategoryFilteredByIdQuery = async (id) => {
   let client;
   try {
     client = await pool.connect();
 
     const result = await client.query(
-      `
-      SELECT
-        users.id AS user_id,
-        users.name AS user_name,
-        users.email AS user_email,
-        images.id AS image_id,
-        images.image_url AS image_url
-      FROM users
-      LEFT JOIN images ON users.image_id = images.id
-      where users.id = $1`,
+      `SELECT
+        categories.id AS category_id,
+        categories.name AS category_name,
+        categories.description AS category_description,
+        images.id AS category_image_id,
+        images.image_url AS category_image_url
+      FROM categories
+      LEFT JOIN images ON categories.image_id = images.id
+      where categories.id = $1`,
       [id]
     );
-
-    return result.rows.map(convertRowToUserModel);
+    return result.rows.map(convertRowToCategoryModel);
   } catch (error) {
     throw customPgException(error);
   } finally {
@@ -29,9 +27,9 @@ export const getAUserFilteredByIdQuery = async (id) => {
   }
 };
 
-export const getUsersFilteredAutoQuery = async (
+export const getCategoriesFilteredAutoQuery = async (
   name,
-  email,
+  description,
   offset = 0,
   limit
 ) => {
@@ -40,7 +38,7 @@ export const getUsersFilteredAutoQuery = async (
     client = await pool.connect();
 
     const queryResult = await client.query(
-      "select count(*) as total from places;"
+      "select count(*) as total from categories;"
     );
 
     const size = parseInt(queryResult.rows[0].total, 10);
@@ -56,27 +54,27 @@ export const getUsersFilteredAutoQuery = async (
 
     // Base query
     let query = `
-    SELECT
-      users.id AS user_id,
-      users.name AS user_name,
-      users.email AS user_email,
-      images.id AS image_id,
-      images.image_url AS image_url
-    FROM users
-    LEFT JOIN images ON users.image_id = images.id
-    where 1=1`;
+      SELECT
+        categories.id AS category_id,
+        categories.name AS category_name,
+        categories.description AS category_description,
+        images.id AS category_image_id,
+        images.image_url AS category_image_url
+      FROM categories
+      LEFT JOIN images ON categories.image_id = images.id
+      where 1=1`;
 
     const values = [];
 
     // Dynamically append conditions
     if (name) {
       values.push(`%${name}%`);
-      query += ` and users.name ILIKE $${values.length}`;
+      query += ` and categories.name ILIKE $${values.length}`;
     }
 
-    if (email) {
-      values.push(`%${email}%`);
-      query += ` and users.email ILIKE $${values.length}`;
+    if (description) {
+      values.push(`%${description}%`);
+      query += ` and categories.description ILIKE $${values.length}`;
     }
 
     values.push(limit);
@@ -86,9 +84,8 @@ export const getUsersFilteredAutoQuery = async (
     query += ` offset $${values.length}`;
 
     const result = await client.query(query, values);
-
     return {
-      places: result.rows.map(convertRowToUserModel),
+      categories: result.rows.map(convertRowToCategoryModel),
       meta: {
         totalPages: totalPages,
         offset: offset,
@@ -106,16 +103,19 @@ export const getUsersFilteredAutoQuery = async (
   }
 };
 
-export const postAUserQuery = async (name, email, image_id = null) => {
+export const postACategoryQuery = async (
+  name,
+  description,
+  image_id = null
+) => {
   let client;
   try {
     client = await pool.connect();
     const result = await client.query(
-      "insert into users (name, email, image_id) values ($1, $2, $3) returning *;",
-      [name, email, image_id]
+      "insert into categories (name, description, image_id) values ($1, $2, $3) returning *;",
+      [name, description, image_id]
     );
-
-    return result.rows.map(convertRowToUserModel);
+    return result.rows.map(convertRowToCategoryModel);
   } catch (error) {
     throw customPgException(error);
   } finally {
@@ -123,16 +123,15 @@ export const postAUserQuery = async (name, email, image_id = null) => {
   }
 };
 
-export const putAUserQuery = async (name, email, image_id, id) => {
+export const putACategoryQuery = async (name, description, image_id, id) => {
   let client;
   try {
     client = await pool.connect();
     const result = await client.query(
-      "update users set name = $1, email= $2, image_id = $3 where id= $4 returning *;",
-      [name, email, image_id, id]
+      "update categories set name = $1, description= $2, image_id = $3 where id= $4 returning *;",
+      [name, description, image_id, id]
     );
-
-    return result.rows.map(convertRowToUserModel);
+    return result.rows.map(convertRowToCategoryModel);
   } catch (error) {
     throw customPgException(error);
   } finally {
@@ -140,11 +139,11 @@ export const putAUserQuery = async (name, email, image_id, id) => {
   }
 };
 
-export const deleteAUserQuery = async (id) => {
+export const deleteACategoryQuery = async (id) => {
   let client;
   try {
     client = await pool.connect();
-    await client.query("delete from users where id = $1;", [id]);
+    await client.query("delete from categories where id = $1;", [id]);
   } catch (error) {
     throw customPgException(error);
   } finally {

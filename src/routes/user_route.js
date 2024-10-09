@@ -1,28 +1,40 @@
 import express from "express";
 import {
-  deleteUserByIdController,
-  getUserByIdController,
-  getUserController,
-  patchUserByIdController,
-  postUserController,
-  putUserByIdController,
-} from "../controllers/user_controller.js";
+  deleteUserProfileByIdController,
+  getUserProfileByIdController,
+  getUserProfileController,
+  patchUserProfileByIdController,
+  postUserProfileController,
+  putUserProfileByIdController,
+} from "../controllers/user_profile_controller.js";
 import {
-  validateUserBodyOptional,
-  validateUserBodyRequired,
-  validateUserQuery,
+  validateUserProfileBodyOptional,
+  validateUserProfileBodyRequired,
 } from "../validators/user_validator.js";
+import { authenticateToken } from "../middlewares/jwt_validate.js";
 
 export const userRoute = express.Router();
 
 userRoute
   .route("/")
-  .get(validateUserQuery, getUserController)
-  .post(validateUserBodyRequired, postUserController);
+  .get(validateUserProfileBodyRequired, getUserProfileController)
+  .post(
+    authenticateToken,
+    validateUserProfileBodyRequired,
+    postUserProfileController
+  );
 
 userRoute
   .route("/:id")
-  .get(getUserByIdController)
-  .put(validateUserBodyRequired, putUserByIdController)
-  .patch(validateUserBodyOptional, patchUserByIdController)
-  .delete(deleteUserByIdController);
+  .get(getUserProfileByIdController)
+  .put(
+    authenticateToken,
+    validateUserProfileBodyRequired,
+    putUserProfileByIdController
+  )
+  .patch(
+    authenticateToken,
+    validateUserProfileBodyOptional,
+    patchUserProfileByIdController
+  )
+  .delete(authenticateToken, deleteUserProfileByIdController);
