@@ -12,17 +12,30 @@ import {
   validateEmployeeBodyRequired,
   validateEmployeeQuery,
 } from "../validators/employee_validator.js";
+import { authenticateToken } from "../middlewares/jwt_validate.js";
 
 export const employeeRoute = express.Router();
 
 employeeRoute
   .route("/")
   .get(validateEmployeeQuery, getEmployeeController)
-  .post(validateEmployeeBodyRequired, postEmployeeController);
+  .post(
+    authenticateToken,
+    validateEmployeeBodyRequired,
+    postEmployeeController
+  );
 
 employeeRoute
   .route("/:id")
   .get(getEmployeeByIdController)
-  .put(validateEmployeeBodyRequired, putEmployeeByIdController)
-  .patch(validateEmployeeBodyOptional, patchEmployeeByIdController)
-  .delete(deleteEmployeeByIdController);
+  .put(
+    authenticateToken,
+    validateEmployeeBodyRequired,
+    putEmployeeByIdController
+  )
+  .patch(
+    authenticateToken,
+    validateEmployeeBodyOptional,
+    patchEmployeeByIdController
+  )
+  .delete(authenticateToken, deleteEmployeeByIdController);

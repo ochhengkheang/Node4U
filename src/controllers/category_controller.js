@@ -4,7 +4,7 @@ import {
   getCategoriesFilteredAutoQuery,
   postACategoryQuery,
   putACategoryQuery,
-} from "../database/query/pg_query_category.js";
+} from "../database/pg/query/pg_query_category.js";
 
 export const getCategoryController = async (req, res) => {
   try {

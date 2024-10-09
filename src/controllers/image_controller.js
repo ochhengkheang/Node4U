@@ -1,7 +1,4 @@
-import {
-  deleteAImageQuery,
-  postAImageQuery,
-} from "../database/query/pg_query_image.js";
+import { postAImageQuery } from "../database/pg/query/pg_query_image.js";
 import { uploadImage } from "../helpers/cloudinary.js";
 
 export const postUploadTypeByIdController = async (req, res) => {

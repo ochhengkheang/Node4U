@@ -1,6 +1,6 @@
 import { pool } from "../pg_pool.js";
-import { customPgException } from "../../helpers/exception.js";
-import { convertRowToPlaceModel } from "../../models/place_model.js";
+import { customPgException } from "../../../helpers/exception.js";
+import { convertRowToPlaceModel } from "../query_parser/place_model.js";
 
 export const getAPlaceFilteredByIdQuery = async (place_id) => {
   let client;
@@ -15,18 +15,11 @@ export const getAPlaceFilteredByIdQuery = async (place_id) => {
           places.name AS place_name,
           places.address,
           places.link,
-          place_images.id AS place_image_id,
-          place_images.image_url AS place_image_url,
           users.id AS user_id,
-          users.name AS user_name,
-          users.email AS user_email,
-          user_images.id AS user_image_id,
-          user_images.image_url AS user_image_url
-      FROM places
-      INNER JOIN users ON places.user_id = users.id
-      LEFT JOIN images AS place_images ON places.image_id = place_images.id
-      LEFT JOIN images AS user_images ON users.image_id = user_images.id
-      where place_id= $1;`,
+          users.username AS user_username
+        FROM places
+        LEFT JOIN users ON places.user_id = users.id
+        where place_id= $1;`,
       [place_id]
     );
 
@@ -75,17 +68,10 @@ export const getPlacesFilteredAutoQuery = async (
       places.name AS place_name,
       places.address,
       places.link,
-      place_images.id AS place_image_id,
-      place_images.image_url AS place_image_url,
       users.id AS user_id,
-      users.name AS user_name,
-      users.email AS user_email,
-      user_images.id AS user_image_id,
-      user_images.image_url AS user_image_url
+      users.username AS user_username
     FROM places
-    INNER JOIN users ON places.user_id = users.id
-    LEFT JOIN images AS place_images ON places.image_id = place_images.id
-    LEFT JOIN images AS user_images ON users.image_id = user_images.id
+    LEFT JOIN users ON places.user_id = users.id
     WHERE 1=1`;
 
     const values = [];

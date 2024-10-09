@@ -5,16 +5,18 @@ export const getSearchController = async (req, res) => {
   const { name, category_id } = req.query;
 
   try {
-    const categoriesResponse = await axios.get(`${config.baseUrl}/category/`);
+    const categoriesResponse = await axios.get(
+      `${config.mainConfig.baseUrl}/category/`
+    );
 
     const categories = categoriesResponse.data;
     if (!categories) throw new Error("Cannot get Category");
     // console.log(categories);
 
     const itemsResponse = !category_id
-      ? await axios.get(`${config.baseUrl}/item?name=${name}`)
+      ? await axios.get(`${config.mainConfig.baseUrl}/item?name=${name}`)
       : await axios.get(
-          `${config.baseUrl}/item?category_id=${encodeURIComponent(category_id)}&name=${name}`
+          `${config.mainConfig.baseUrl}/item?category_id=${encodeURIComponent(category_id)}&name=${name}`
         );
 
     const items = itemsResponse.data;

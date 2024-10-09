@@ -1,15 +1,15 @@
 import pg from "pg";
-import { config, pgConfig } from "../config/config.js";
+import { config } from "../../config/config.js";
 
 const { Pool } = pg;
 
 export const pool = new Pool({
-  host: pgConfig.pgHost,
-  user: pgConfig.pgUser,
-  port: pgConfig.pgPort,
-  password: pgConfig.pgPassword,
-  database: pgConfig.pgDatabase,
-  ssl: pgConfig.pgSsl,
+  host: config.pgConfig.pgHost,
+  user: config.pgConfig.pgUser,
+  port: config.pgConfig.pgPort,
+  password: config.pgConfig.pgPassword,
+  database: config.pgConfig.pgDatabase,
+  ssl: config.pgConfig.pgSsl,
 });
 
 pool.on("connect", () => {

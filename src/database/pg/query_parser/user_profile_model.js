@@ -1,4 +1,4 @@
-export const convertRowToUserModel = (row) => ({
+export const convertRowToUserProfileModel = (row) => ({
   user_id: row.user_id,
   name: row.user_name,
   email: row.user_email,

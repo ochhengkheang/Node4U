@@ -8,6 +8,7 @@ submitButton.addEventListener("click", async () => {
     const name = document.getElementById("form-name").value;
     const address = document.getElementById("form-address").value;
     const link = document.getElementById("form-link").textContent;
+
     let response;
 
     if (label && name && address && link) {
