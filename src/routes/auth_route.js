@@ -4,11 +4,11 @@ import {
   postTokenController,
   postTokenRefreshController,
 } from "../controllers/auth_controller.js";
+import { authenticateToken } from "../middlewares/jwt_validate.js";
 import {
   validateLoginBodyRequired,
   validateRegisterBodyRequired,
 } from "../validators/auth_validator.js";
-import { authenticateToken } from "../middlewares/jwt_validate.js";
 
 import express from "express";
 
@@ -22,4 +22,4 @@ authRoute.route("/token").post(validateLoginBodyRequired, postTokenController);
 
 authRoute.route("/token/refresh").post(postTokenRefreshController);
 
-authRoute.route(authenticateToken, "/logout").post(postLogoutController);
+authRoute.route( "/logout").post(authenticateToken, postLogoutController);
