@@ -1,12 +1,12 @@
 import { config } from "../config/config.js";
-import { deleteAImageQuery } from "../database/query/pg_query_image.js";
+import { deleteAImageQuery } from "../database/pg/query/pg_query_image.js";
 import {
   deleteAPlaceQuery,
   getAPlaceFilteredByIdQuery,
   getPlacesFilteredAutoQuery,
   postAPlaceQuery,
   putAPlaceQuery,
-} from "../database/query/pg_query_place.js";
+} from "../database/pg/query/pg_query_place.js";
 import { deleteImage } from "../helpers/cloudinary.js";
 import { getClientIP } from "../helpers/ip.js";
 
@@ -15,8 +15,8 @@ export const getPlaceController = async (req, res) => {
     const clientIP = getClientIP(req);
 
     const clientEnv = {
-      baseUrl: config.baseUrl,
-      googleMapApiKey: config.googleMapApiKey,
+      baseUrl: config.mainConfig.baseUrl,
+      googleMapApiKey: config.apiConfig.googleMapApiKey,
       clientIP: clientIP,
     };
 
@@ -34,6 +34,7 @@ export const getPlaceController = async (req, res) => {
     return res.render("pages/place.pug", {
       clientEnv,
       places,
+      nonce: res.locals.nonce,
     });
   } catch (error) {
     req.flash("error", error.message);
@@ -170,12 +171,12 @@ export const patchPlaceByIdController = async (req, res) => {
       });
     }
 
-    if (user_id != addressResult[0].user.user_id) {
-      return res.status(401).json({
-        status: 401,
-        message: `Unauthorized`,
-      });
-    }
+    // if (user_id != addressResult[0].user.user_id) {
+    //   return res.status(401).json({
+    //     status: 401,
+    //     message: `Unauthorized`,
+    //   });
+    // }
 
     await putAPlaceQuery(
       !lat ? addressResult[0].lat : lat,
@@ -222,9 +223,9 @@ export const deletePlaceByIdController = async (req, res) => {
 
     await deleteAPlaceQuery(id, user_id);
 
-    await deleteAImageQuery(address[0].image.image_id);
+    // await deleteAImageQuery(address[0].image.image_id);
 
-    await deleteImage(id, "places");
+    // await deleteImage(id, "places");
 
     res.status(201).json({
       status: 201,

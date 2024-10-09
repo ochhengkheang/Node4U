@@ -1,6 +1,6 @@
-import { customPgException } from "../../helpers/exception.js";
-import { convertRowToEmployeeModel } from "../../models/employee_model.js";
+import { convertRowToEmployeeModel } from "../query_parser/employee_model.js";
 import { pool } from "../pg_pool.js";
+import { customPgException } from "../../../helpers/exception.js";
 
 export const getAEmployeeFilteredByIdQuery = async (id) => {
   let client;

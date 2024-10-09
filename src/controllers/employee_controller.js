@@ -4,8 +4,8 @@ import {
   getEmployeesFilteredAutoQuery,
   postAEmployeeQuery,
   putAEmployeeQuery,
-} from "../database/query/pg_query_employee.js";
-import { deleteAImageQuery } from "../database/query/pg_query_image.js";
+} from "../database/pg/query/pg_query_employee.js";
+import { deleteAImageQuery } from "../database/pg/query/pg_query_image.js";
 import { deleteImage } from "../helpers/cloudinary.js";
 
 export const getEmployeeController = async (req, res) => {

@@ -29,6 +29,6 @@ block content
             h1(class="text-center text-3xl font-bold ") Popular Products
         div(class="my-0 lg:my-10 xl:my-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4")
             each item in items.items
-                +productCard(item.item_name, item.item_price, item.category.category_name, item.image.image_id)
+                +productCard(item.item_name, item.item_price, item.category.category_name, item.image.image_url)
 
     script(src="js/index.js")

@@ -1,25 +1,31 @@
 import { pool } from "../pg_pool.js";
-import { customPgException } from "../../helpers/exception.js";
-import { convertRowToCategoryModel } from "../../models/category_model.js";
+import { customPgException } from "../../../helpers/exception.js";
+import { convertRowToBrandModel } from "../query_parser/brand_model.js";
 
-export const getACategoryFilteredByIdQuery = async (id) => {
+export const getABrandFilteredByIdQuery = async (id) => {
   let client;
   try {
     client = await pool.connect();
 
     const result = await client.query(
-      `SELECT
+      `
+      select
+        brands.id AS brand_id,
+        brands.name AS brand_name,
+        brands.description AS brand_description,
+        brand_images.id AS brand_image_id,
+        brand_images.image_url AS brand_image_url,
         categories.id AS category_id,
         categories.name AS category_name,
-        categories.description AS category_description,
-        images.id AS category_image_id,
-        images.image_url AS category_image_url
-      FROM categories
-      LEFT JOIN images ON categories.image_id = images.id
-      where categories.id = $1`,
+        categories.description AS category_description
+      FROM brands
+      INNER JOIN categories ON brands.category_id = categories.id
+      LEFT JOIN images AS brand_images ON brands.image_id = brand_images.id
+      where brands.id= $1;`,
       [id]
     );
-    return result.rows.map(convertRowToCategoryModel);
+
+    return result.rows.map(convertRowToBrandModel);
   } catch (error) {
     throw customPgException(error);
   } finally {
@@ -27,7 +33,8 @@ export const getACategoryFilteredByIdQuery = async (id) => {
   }
 };
 
-export const getCategoriesFilteredAutoQuery = async (
+export const getBrandsFilteredAutoQuery = async (
+  category_id,
   name,
   description,
   offset = 0,
@@ -38,7 +45,7 @@ export const getCategoriesFilteredAutoQuery = async (
     client = await pool.connect();
 
     const queryResult = await client.query(
-      "select count(*) as total from categories;"
+      "select count(*) as total from brands;"
     );
 
     const size = parseInt(queryResult.rows[0].total, 10);
@@ -54,27 +61,34 @@ export const getCategoriesFilteredAutoQuery = async (
 
     // Base query
     let query = `
-      SELECT
+    SELECT
+      brands.id AS brand_id,
+        brands.name AS brand_name,
+        brands.description AS brand_description,
+        brand_images.id AS brand_image_id,
+        brand_images.image_url AS brand_image_url,
         categories.id AS category_id,
         categories.name AS category_name,
-        categories.description AS category_description,
-        images.id AS category_image_id,
-        images.image_url AS category_image_url
-      FROM categories
-      LEFT JOIN images ON categories.image_id = images.id
-      where 1=1`;
+        categories.description AS category_description
+      FROM brands
+      INNER JOIN categories ON brands.category_id = categories.id
+      LEFT JOIN images AS brand_images ON brands.image_id = brand_images.id
+    WHERE 1=1`;
 
     const values = [];
 
     // Dynamically append conditions
+    if (category_id) {
+      values.push(category_id);
+      query += ` AND categories.id = $${values.length}`;
+    }
     if (name) {
       values.push(`%${name}%`);
-      query += ` and categories.name ILIKE $${values.length}`;
+      query += ` AND brands.name ILIKE $${values.length}`;
     }
-
     if (description) {
       values.push(`%${description}%`);
-      query += ` and categories.description ILIKE $${values.length}`;
+      query += ` AND brands.description ILIKE $${values.length}`;
     }
 
     values.push(limit);
@@ -84,8 +98,9 @@ export const getCategoriesFilteredAutoQuery = async (
     query += ` offset $${values.length}`;
 
     const result = await client.query(query, values);
+
     return {
-      categories: result.rows.map(convertRowToCategoryModel),
+      brand: result.rows.map(convertRowToBrandModel),
       meta: {
         totalPages: totalPages,
         offset: offset,
@@ -103,7 +118,8 @@ export const getCategoriesFilteredAutoQuery = async (
   }
 };
 
-export const postACategoryQuery = async (
+export const postABrandQuery = async (
+  category_id,
   name,
   description,
   image_id = null
@@ -111,11 +127,13 @@ export const postACategoryQuery = async (
   let client;
   try {
     client = await pool.connect();
+
     const result = await client.query(
-      "insert into categories (name, description, image_id) values ($1, $2, $3) returning *;",
-      [name, description, image_id]
+      "insert into brands (category_id, name, description, image_id) values ($1, $2, $3, $4) returning *;",
+      [category_id, name, description, image_id]
     );
-    return result.rows.map(convertRowToCategoryModel);
+
+    return result.rows.map(convertRowToBrandModel);
   } catch (error) {
     throw customPgException(error);
   } finally {
@@ -123,15 +141,23 @@ export const postACategoryQuery = async (
   }
 };
 
-export const putACategoryQuery = async (name, description, image_id, id) => {
+export const putABrandQuery = async (
+  category_id,
+  name,
+  description,
+  image_id,
+  id
+) => {
   let client;
   try {
     client = await pool.connect();
+
     const result = await client.query(
-      "update categories set name = $1, description= $2, image_id = $3 where id= $4 returning *;",
-      [name, description, image_id, id]
+      "update brands set category_id= $1, name = $2, description = $3, image_id= $4 where id= $5 returning *;",
+      [category_id, name, description, image_id, id]
     );
-    return result.rows.map(convertRowToCategoryModel);
+
+    return result.rows.map(convertRowToBrandModel);
   } catch (error) {
     throw customPgException(error);
   } finally {
@@ -139,11 +165,12 @@ export const putACategoryQuery = async (name, description, image_id, id) => {
   }
 };
 
-export const deleteACategoryQuery = async (id) => {
+export const deleteABrandQuery = async (id) => {
   let client;
   try {
     client = await pool.connect();
-    await client.query("delete from categories where id = $1;", [id]);
+
+    await client.query("delete from brands where id = $1;", [id]);
   } catch (error) {
     throw customPgException(error);
   } finally {

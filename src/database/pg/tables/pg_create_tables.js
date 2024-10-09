@@ -8,10 +8,24 @@ export const createTables = async () => {
             id serial primary key,
             image_url TEXT not null
         );
+        CREATE TABLE IF NOT EXISTS tokens(
+          id SERIAL PRIMARY KEY,
+          access_token text,
+          refresh_token text
+        );
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
-            name VARCHAR(100) not null,
-            email VARCHAR(100) UNIQUE NOT NULL,
+            username VARCHAR(100) UNIQUE not null,
+            password VARCHAR(100) NOT NULL,
+            token_id integer references tokens(id) on delete cascade
+        );
+        CREATE TABLE IF NOT EXISTS user_profiles(
+            user_id INTEGER PRIMARY KEY REFERENCES users(id) on delete cascade,
+            first_name VARCHAR(100),
+            last_name VARCHAR(100),
+            email VARCHAR(100) UNIQUE,
+            address TEXT,
+            phone TEXT,
             image_id integer references images(id) on delete set null
         );
         CREATE TABLE IF NOT EXISTS employees(
@@ -47,8 +61,8 @@ export const createTables = async () => {
             image_id integer references images(id) on delete cascade
         );
         CREATE TABLE IF NOT EXISTS places (
+            place_id VARCHAR(100) PRIMARY KEY,
             user_id INTEGER references users(id) on delete cascade,
-            place_id VARCHAR(100) unique not null,
             lat DECIMAL(20, 17),
             lng DECIMAL(20, 17),
             label varchar(100),

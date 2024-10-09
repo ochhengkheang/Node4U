@@ -1,6 +1,6 @@
 import { pool } from "../pg_pool.js";
-import { customPgException } from "../../helpers/exception.js";
-import { convertRowToItemModel } from "../../models/item_model.js";
+import { customPgException } from "../../../helpers/exception.js";
+import { convertRowToItemModel } from "../query_parser/item_model.js";
 
 export const getAItemFilteredByIdQuery = async (id) => {
   let client;

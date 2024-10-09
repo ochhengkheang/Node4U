@@ -43,8 +43,10 @@ block content
                 each place in places.places
                     +addressTile(place)
 
-    script.
+    //- Give nonce to validate that a script or style
+    //- was intentionally placed in the document by the server, not injected by a third party.
+    script(nonce=nonce).
         const clientBaseUrl = `#{clientEnv.baseUrl}`;
-        const apiKey = `#{clientEnv.googleMapApiKey}`;
-    script(src="/js/map.js")
-    script(src="/js/place.js")
+        const apiKey = `#{clientEnv.googleMapApiKey}`; // Google Map api problem, restrict it
+    script(src="/js/map.js" nonce=nonce)
+    script(src="/js/place.js" nonce=nonce)

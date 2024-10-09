@@ -1,4 +1,4 @@
-import { customPgException } from "../../helpers/exception.js";
+import { customPgException } from "../../../helpers/exception.js";
 import { pool } from "../pg_pool.js";
 
 export const postAImageQuery = async (image_url) => {

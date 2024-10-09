@@ -12,17 +12,30 @@ import {
   validateCategoryBodyRequired,
   validateCategoryQuery,
 } from "../validators/category_validator.js";
+import { authenticateToken } from "../middlewares/jwt_validate.js";
 
 export const categoryRoute = express.Router();
 
 categoryRoute
   .route("/")
   .get(validateCategoryQuery, getCategoryController)
-  .post(validateCategoryBodyRequired, postCategoryController);
+  .post(
+    authenticateToken,
+    validateCategoryBodyRequired,
+    postCategoryController
+  );
 
 categoryRoute
   .route("/:id")
   .get(getCategoryByIdController)
-  .put(validateCategoryBodyRequired, putCategoryByIdController)
-  .patch(validateCategoryBodyOptional, patchCategoryByIdController)
-  .delete(deleteCategoryByIdController);
+  .put(
+    authenticateToken,
+    validateCategoryBodyRequired,
+    putCategoryByIdController
+  )
+  .patch(
+    authenticateToken,
+    validateCategoryBodyOptional,
+    patchCategoryByIdController
+  )
+  .delete(authenticateToken, deleteCategoryByIdController);
